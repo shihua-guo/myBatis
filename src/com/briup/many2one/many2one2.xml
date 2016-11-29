@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.mappers.Many2OneMapper">
+
+	<!-- 学生的结果 -->
+	<resultMap type="MStudent" id="stuResult">
+		<id column="sid" property="id" />
+		<result column="sname" property="name" />
+	</resultMap>
+
+	<!-- 班级的结果 -->
+	<resultMap type="OneClz" id="clzResult">
+		<id column="cid" property="id" />
+		<result column="cname" property="name" />
+	</resultMap>
+
+	<!-- 班级和学生的结果 -->
+	<resultMap type="OneClz" id="clzStusResult" extends="clzResult">
+		<collection property="stus" column="cid" select="selectStusByCid" />
+		<!-- <collection property="stus" resultMap="stuResult" /> -->
+	</resultMap>
+
+	<!-- 只选择学生 -->
+	<select id="selectStusByid" resultMap="stuResult">
+		select id sid,name sname
+		from mb_stu
+		where id = #{id}
+	</select>
+
+	<!-- 只选择学生通过CID -->
+	<select id="selectStusByCid" resultMap="stuResult">
+		select id sid,name sname
+		from mb_stu
+		where clz_id = #{id}
+	</select>
+
+	<!-- 只选择班级,通过班级ID查询，结果只返回一个 -->
+	<select id="selectClzByid" parameterType="int" resultMap="clzResult">
+		select
+		id cid,name cname
+		from mb_clz
+		where id = #{id}
+	</select>
+
+	<!-- 选择班级和学生，通过CID查找，子查询 -->
+	<select id="selectClzStusByCid2" parameterType="int" resultMap="clzStusResult">
+		select id cid,name cname
+		from mb_clz
+		where id = #{id}
+	</select>
+
+	<!-- 选择班级和学生 -->
+	<select id="selectClzStusByCid" parameterType="int" resultMap="clzStusResult">
+		select c.id cid,c.name cname,s.id sid,s.name sname
+		from mb_clz c,mb_stu
+		s
+		where c.id=s.clz_id and c.id = #{id}
+	</select>
+
+	<!--  插入班级到学生 -->
+	<select id="insertClzInStu" >
+		insert into mb_stu values(
+			#{stu.id},
+			#{stu.name},
+			#{clz.id}	
+		)
+	</select> 
+
+</mapper>

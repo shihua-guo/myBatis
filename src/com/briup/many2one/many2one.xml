@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.mappers.Many2OneMapper">
+	<resultMap type="OneClz" id="clzStusResult">
+		<id column="cid" property="id"/>
+		<result column="cname" property="name"/>
+		<collection property="stus" ofType="MStudent">
+			<result column="sid" property="id"/>
+			<result column="sname" property="name"/>
+		</collection>
+	</resultMap>
+	<select id="selectClzStusByCid" parameterType="int" 
+		resultMap="clzStusResult">
+		select c.id cid,c.name cname,s.id sid,s.name sname
+		from mb_clz c,mb_stu
+		s
+		where c.id=s.clz_id and c.id = #{id}
+	</select>
+</mapper>

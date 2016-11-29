@@ -1,0 +1,8 @@
+create table mb_clz(
+id number(5) primary key,
+name varchar2(10));
+
+create table mb_stu(
+id number(5) primary key,
+name varchar2(10),
+clz_id number(5) references mb_clz(id));

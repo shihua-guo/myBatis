@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.mappers.Many2ManyMapper">
+	<resultMap type="MUser" id="userResult">
+		<id column="u_id" property="id"/>
+		<result column="u_name" property="name"/>
+		<collection property="roles" ofType="MRole">
+			<id column="r_id" property="id"/>
+			<result column="r_name" property="name"/>
+		</collection>
+	</resultMap>
+	<!-- 通过UserId查询 -->
+	<select id="selectUserRoleByUid" parameterType="int" resultMap="userResult">
+		select u.id u_id,u.name u_name,r.id r_id,r.name r_name
+		from mb_muser u,mb_mrole r,mb_ur ur
+		where ur.u_id=u.id and ur.r_id = r.id and u.id=#{id}
+	</select>
+	
+	<!-- 插入user和role的id作为参数：user表和角色表通过ur桥表来维护 -->
+	<insert id="insertUR" >
+		insert into mb_ur values(
+			#{userid},
+			#{roleid}
+		)
+	</insert>
+	
+	<!-- 插入user和role的对象作为参数  -->
+	<insert id="insertUR2">
+		insert into mb_ur(u_id,r_id) values(
+			#{userid}
+			#{roleid}
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.mappers.DynamicMapper">
+	<resultMap type="com.briup.dynamic.S_Emp" id="s_empResult">
+		<result column="userid" property="user_id"/>
+	</resultMap>
+	
+	<!-- 通过传入参数的map来查询 -->
+	<select id="selectByIf" resultType="com.briup.dynamic.S_Emp">
+		select *
+		from s_emp
+		where title = #{title}
+		<if test="minSalary!=null">
+			and salary >= #{minSalary}
+		</if>
+		<if test="maxSalary!=null">
+			and salary &lt;= #{maxSalary}
+		</if>
+		<if test="minDate!=null">
+			and start_date >= #{minDate}
+		</if>
+		<if test="maxDate!=null">
+			and start_date &lt;=#{maxDate}
+		</if>
+	</select>
+	
+	<!-- 通过直接限定了参数进行查询 -->
+	<select id="selectByIf2" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<if test="param1!=null">
+		where title = #{param1}
+		</if>
+		<if test="param2!=null">
+			and salary >= #{param2}
+		</if>
+		<if test="param3!=null">
+			and salary &lt;= #{param3}
+		</if>
+		<if test="param4!=null">
+			and start_date >= #{param4}
+		</if>
+		<if test="param5!=null">
+			and start_date &lt;=#{param5}
+		</if>
+	</select>
+	
+	<!-- 测试Choose -->
+	<select id="selectByChoose" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<choose>
+			<when test="selectBy=='title'">
+				where title = #{title}
+			</when>
+			<when test="selectBy=='salary'">
+				where salary>=#{salary}
+			</when>
+			<otherwise>
+				where dept_id = 2
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 测试where -->
+	<select id="selectByWhere" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<where>
+			<if test="title!=null">
+				and title = #{title}
+			</if>
+			<if test="minSalary!=null">
+				and salary >= #{minSalary}
+			</if>
+			<if test="maxSalary!=null">
+				and salary &lt;= #{maxSalary}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 测试抽出SQL -->
+	<sql id="selectEmp">
+		select *
+		from s_emp
+	</sql>
+	
+	<!-- 测试trim -->
+	<!-- trim:prefix自动添加where(有结果返回就加/替换)，并且把前缀是and 或者or开头的替换成where -->
+	<select id="selectByTrim" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="title!=null">
+				and title=#{title}
+			</if>
+			<if test="salary!=null">
+				or salary &lt; #{salary}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 测试ForEach -->
+	<!-- foreach标签中collection放的是需要遍历的集合
+		 item放的是需要判断的表的列
+	 -->
+	<select id="selectByForEach" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<where>
+			<if test="list!=null">
+				<foreach collection="list" item="id">
+					or id = #{id}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 测试ForEach的IN -->
+	<!-- foreach标签中collection放的是需要遍历的集合
+		 item放的是需要判断的表的列,open放的是开始
+	 -->
+	<select id="selectByForEach2" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<where>
+			<if test="list!=null">
+			id in
+				<foreach collection="list" item="id" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 测试Set -->
+	<!-- set 目前我所知主要是用于update，
+	当if条件符合，自动拼接上if里面的sql语句
+	并且非常智能的把逗号去掉？？ -->
+	<update id="updateBySet" >
+		update s_emp 
+		<set>
+			<if test="last_name!=null">
+				last_name = #{last_name},
+			</if>
+			<if test="first_name!=null">
+				first_name = #{first_name},
+			</if>
+			<if test="user_id!=null">
+				userid = #{user_id},
+			</if>
+			<if test="start_date!=null">
+				start_date = #{start_date},
+			</if>
+			<if test="comments!=null">
+				comments = #{comments}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<!-- 测试bind -->
+	<!-- bind 是在传进的参数拼接一些字符OGNL？？-->
+	<select id="selectByBind" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+		<bind name="title" value="'%'+_parameter+'%'"/>
+		where title like #{title}
+	</select>
+	
+	<!-- 测试返回结果使用map接收 -->
+	<select id="selectAll" resultType="com.briup.dynamic.S_Emp">
+		<include refid="selectEmp"></include>
+	</select>
+	
+	<!-- 测试分页 -->
+	<select id="selectByPage" resultType="com.briup.dynamic.S_Emp" >
+		<include refid="selectEmp"></include>
+	</select>
+</mapper>

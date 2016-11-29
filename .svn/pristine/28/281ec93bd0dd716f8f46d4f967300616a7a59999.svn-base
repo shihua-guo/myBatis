@@ -1,0 +1,26 @@
+create table mb_muser(
+id number(5) primary key,
+name varchar2(10)
+)
+insert into mb_muser values(1,'alan');
+insert into mb_muser values(2,'jade');
+
+create table mb_mrole(
+id number(5) primary key,
+name varchar2(10)
+)
+insert into mb_mrole values(3,'teacher');
+insert into mb_mrole values(4,'fisher');
+
+create table mb_ur(
+u_id number(5) references mb_muser(id),
+r_id number(5) references mb_mrole(id),
+primary key(u_id,r_id)
+)
+
+insert into mb_ur values(1,3);
+insert into mb_ur values(1,4);
+insert into mb_ur values(2,3);
+insert into mb_ur values(2,4);
+
+

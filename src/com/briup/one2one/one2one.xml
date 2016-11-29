@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.one2one.One2OneMapper">
+	<resultMap type="Hus" id="husResult">
+		<id column="hid" property="id"/>	
+		<result column="hname" property="name"/>
+	</resultMap>
+	<resultMap type="Wife" id="wifeResult">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+	</resultMap>
+	<resultMap type="Wife" id="wifeAndHusResult"
+		 extends="wifeResult">
+		<association property="hus" column="hus_id"
+		 select="selectHusById"></association>
+		<!--  <association property="hus" resultMap="husResult">
+		 </association> -->
+	</resultMap>
+	<select id="selectWifeAndHusByWid" parameterType="int" 
+		resultMap="wifeAndHusResult">
+		select w.id,w.name,h.id hus_id,h.name hname
+		from mb_wife w,mb_hus h
+		where w.hus_id = h.id and w.id = #{id}
+	 </select>
+	
+	<select id="selectHusById" resultMap="husResult">
+		select id hid,name hname
+		from mb_hus
+		where id = #{id}
+	</select>
+	
+	<select id="selectWifeById" resultMap="wifeResult">
+		select id,name,hus_id
+		from mb_wife
+		where id = #{id}
+	</select>
+	
+	<!-- <select id="selectWifeAndHusByWid" parameterType="int" resultMap="wifeAndHusResult">
+		select w.id,w.name,h.id hid,h.name hname
+		from wife w,husband h
+		where w.h_id = h.id and w.id = #{id}
+	</select> -->
+</mapper>

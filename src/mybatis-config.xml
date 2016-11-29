@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 读取properties文件 -->
+	<properties resource="db.properties">
+		<property name="username" value="alan" />
+		<property name="password" value="root" />
+	</properties>
+
+	<!-- 别名， -->
+	<typeAliases>
+		<typeAlias type="com.briup.bean.Student" alias="Student" />
+		<!-- <package name="com.briup.bean"/> -->
+		<package name="com.briup.bean" />
+		<package name="com.briup.one2one" />
+		<package name="com.briup.many2one" />
+		<package name="com.briup.many2many" />
+	</typeAliases>
+
+	<!-- 转化类型 -->
+	<typeHandlers>
+		<!-- 拼接Address类为字符串 -->
+		<typeHandler handler="com.briup.typeConvert.AddressHandler"
+			javaType="com.briup.bean.Address" jdbcType="VARCHAR" />
+		<!-- 处理枚举类型，把字符串转化为枚举类型的编号 -->
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler"
+		 javaType="com.briup.enums.Gender"/>
+	</typeHandlers>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	
+<!-- 测试其他环境 -->
+<!-- 	<environments default="shoppingcart">
+		<environment id="shoppingcart">
+			<transactionManager type="MANAGED" />
+			<dataSource type="JNDI">
+				<property name="data_source" value="java:comp/jdbc/ShoppingcartDS" />
+			</dataSource>
+		</environment>
+	</environments> -->
+	
+	
+	<mappers>
+		<!-- <mapper resource="com/briup/mappers/studentMapper.xml" />
+		<mapper resource="com/briup/mappers/TeacherMapper.xml"></mapper>
+		<mapper resource="com/briup/mappers/TeacherMapper.xml"></mapper>
+		<mapper resource="com/briup/mappers/UserMapper.xml"></mapper>-->
+		<mapper resource="com/briup/one2one/HusMapper.xml" />
+		<mapper resource="com/briup/one2one/WifeMapper.xml" />
+		<!-- <mapper resource="com/briup/one2one/One2One.xml" />
+		<mapper resource="com/briup/many2one/many2one.xml"/>-->
+		<mapper resource="com/briup/many2one/many2one2.xml" /> 
+		<mapper resource="com/briup/many2many/many2many.xml" /> 
+		<mapper resource="com/briup/annotation/annotation.xml" />
+		<mapper resource="com/briup/dynamic/dynamicMapper.xml" />
+		<mapper resource="com/briup/book/bookMapper.xml"/>
+		<mapper resource="com/briup/enums/EnumMapper.xml"/>
+		<mapper resource="com/briup/autoKey/autoKey.xml"/>
+		<mapper class="com.briup.annotation2.AnnotationMapper"/>
+		
+	</mappers>
+</configuration>

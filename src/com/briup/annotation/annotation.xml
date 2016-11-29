@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.briup.mappers.AnnotationMapper">
+	<select id="selectAnnotation" resultType="com.briup.annotation.AStudent">
+		select * 
+		from mb_student
+		where rownum = #{id}
+	</select>
+</mapper>

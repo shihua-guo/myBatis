@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace = "com.briup.one2one.WifeMapper" >
+<resultMap type="Wife" id="WifeMap">
+	<result column="w.name" property="wife.name"/>	
+</resultMap>
+<resultMap type="Wife" id="WifeAndHus" extends="WifeMap">
+	<result column="hname" property="hus.name"/>	
+</resultMap>
+	<select id="selectCouple"  parameterType="int" resultMap = "WifeAndHus">
+		select  w.name,h.name as hname
+		from mb_wife w,mb_hus h
+		where w.hus_id = h.id and w.id = #{id}
+	</select>
+	<insert id="insert" parameterType="Wife">
+		insert into mb_wife values(
+			#{id},#{name},#{hus.id}
+		)
+	</insert>
+	
+</mapper>

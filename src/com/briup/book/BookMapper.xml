@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.book.BookMapper">
+	<!-- 插入book -->
+	<insert id="add" >
+		insert into mb_book values(
+			#{id},#{bookName},#{author},#{publishDate},#{price}
+		)
+	</insert>
+	
+	<!-- 通过书名查找book -->
+	<select id="findBookByName" resultType="com.briup.book.Book">
+		select *
+		from mb_book
+		where bookname = #{bookName}
+	</select>
+	
+	<!-- 通过id查找book -->
+	<select id="findBookById" parameterType="int" resultType="com.briup.book.Book" >
+		select *
+		from mb_book
+		where id = #{id}
+	</select>
+	
+	<!-- 找到所有的书籍 -->
+	<select id="findAllBooks" resultType="com.briup.book.Book">
+		select *
+		from mb_book
+	</select>
+	
+	<!-- 查找所有书籍的名字 -->
+	<select id="findAllBooksName" resultType="String">
+		select bookname
+		from mb_book
+	</select>
+	
+	<!-- 查找一共有多少书籍 -->
+	<select id="findCountOfBook" resultType="int">
+		select count(*)
+		from mb_book
+	</select>
+	
+	<!-- 修改书，通过传入的book的id确定哪本 -->
+	<update id="updateBook" >
+		update mb_book set bookname=#{bookName},author=#{author},
+			publishDate=#{publishDate},price=#{price} 
+		where id = #{id}
+	</update>
+	
+	<!-- 查找所有书籍的名字和对应作者的名字 -->
+	<select id="findBookNameAndAuthor" resultType="map">
+		select bookname,author
+		from mb_book
+	</select>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace = "com.briup.one2one.HusMapper" >
+	<insert id="insert" parameterType="Hus">
+		insert into mb_hus values(
+			#{id},#{name}
+		)
+	</insert>
+	<select id="getHus" parameterType="int" resultType="Hus">
+		select * from mb_hus
+		where id =#{id}
+	</select>
+</mapper>
